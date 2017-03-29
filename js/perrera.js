@@ -1,16 +1,10 @@
-(function ($) {
-    var endpoint = "http://localhost:8080/perreraWS/service/";
+var endpoint = "http://localhost:8080/perreraWS/service/";
     var perros = []; //array con perros
     var perro_seleccionado;
-
-
-
 $(function() {
     console.log( "ready!" );
-
-
     //llamada Ajax
-   $.ajax(endpoint + "perro/", {
+    $.ajax(endpoint + "perro/", {
         "type": "get"
         , "encoding": "UTF-8"
         , "data": {
@@ -18,37 +12,27 @@ $(function() {
         }
         , "success": function (result) {
             console.log("Llego el contenido y no hubo error", result);
-
             perros = [];
-
             if ( result == undefined ){
                 $('#list_home').html('<li style="color:red;">No Existen perro todavia, por favor da de alta uno.</li>');
-
             }else{
                 $.each(result, function(i,v){
                    perros.push(v);
                 });
-
                 console.debug('cargados %i perros', perros.length );
                 refreshListView();
             }
-
         }
         , "error": function (result) {
             console.error("Este callback maneja los errores", result);
             $('#list_home').html('<li style="color:red;">Servidor parado, perdona las molestias.</li>');
         }
     });
-
-
 });
-
 function refreshListView(){
-
     $list = $('#list_home');
     $list.html('');
     console.log('limpiada lista');
-
     var li = '<li onClick="detalle_perro(#posicion#)">'+
                  '<a href="#">'+
                      '<img src="#perro.imagen#" class="ui-thumbnail ui-thumbnail-circular" />'+
@@ -56,7 +40,6 @@ function refreshListView(){
                      '<p>#perro.raza#</p>'+
                  '</a>'+
              '</li>';
-
     var content = '';
     var item;
     $.each(perros, function(i,v){
@@ -67,25 +50,11 @@ function refreshListView(){
         item = item.replace('#perro.raza#', v.raza);
         content += item;
     });
-
     $list.html(content).listview('refresh');
     console.log('lista recargada');
-
-    //registar click en listview
-    /*
-     $list.click(function(event){
-         console.debug('click %o' , event.target.parentElement );
-     });
-    */
-
 }
-
-
 function detalle_perro( posicion ){
     console.debug('pulsado %i elemento de la lista valor %o', posicion, perros[posicion]);
-
     // Dialog present in a multipage document
     $.mobile.changePage( "#page_detalle", { role: "dialog" } );
-
 }
-})(jQuery); // end of jQuery name space
