@@ -5,48 +5,69 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Perrera Client</title>
-    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Favicon -->
+
+    <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+
+    <!-- CSS -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
     <link rel="stylesheet" href="vendor/waves/waves.min.css" />
     <link rel="stylesheet" href="vendor/wow/animate.css" />
     <link rel="stylesheet" href="css/nativedroid2.css" />
-    <link rel="stylesheet" href="css/nativedroid2.color.teal.css">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> </head>
+    <link rel="stylesheet" href="css/nativedroid2.color.teal.css" />
+</head>
 
 <body>
+
     <!-- pageHome -->
-    <div data-role="page" id="pageHome" data-position="fixed">
-        <div data-role="header">
-            <h1>Listado Perros</h1>
-
-        </div>
+    <div data-role="page" id="pageHome" class="">
+        <div data-role="header" data-position="fixed">
+            <h1> Listado de Perros</h1> </div>
         <div data-role="content">
-           <ul
-               id="list_home"
-               data-role="listview"
-               data-icon="false"
-               data-filter="true"
-               data-filter-placeholder="Busca tu perro">
-                Cargando perros....
+            <ul
+                id="list_home"
+                data-role="listview"
+                data-icon="false"
+                data-filter="true"
+                data-filter-placeholder="Busca tu perro">
+                <p>Cargando perros....</p>
             </ul>
-
         </div>
-        <div data-role="footer" data-position="fixed">
-             Mostrando X perros
-             <a href="#page2">Ir a Pagina2</a>
-        </div>
+        <div data-role="footer" data-position="fixed">Mostrando X Perros <a href="#page2">Pagina 2</a></div>
     </div>
-    <!-- /pageHome -->
+    <!-- pageHome:end -->
 
-    <div data-role="page" id="page2" class=""> Kaixo <a href="#pageHome">Ir a Home</a> </div>
+    <!-- page2 -->
+    <div data-role="page" id="page2" class=""> <a href="#pageHome">PaginaHome</a>
+        <p>Hola pagina 2</p>
+    </div>
+    <!-- page2:end -->
 
-
-     <div data-role="dialog" id="page_detalle">
-              mODAL
+    <div data-role="dialog" id="page_detalle">
+              Modal
      </div>
 
-    <!-- /page -->
     <!-- Script -->
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
@@ -55,95 +76,8 @@
     <script src="vendor/wow/wow.min.js"></script>
     <script src="js/nativedroid2.js"></script>
     <script src="nd2settings.js"></script>
+    <script src="js/perrera.js"></script>
     <!-- Script:end -->
-
-<script>
-
-    var endpoint = "http://localhost:8080/perreraWS/service/";
-    var perros = []; //array con perros
-    var perro_seleccionado;
-
-
-
-$(function() {
-    console.log( "ready!" );
-
-
-    //llamada Ajax
-    $.ajax(endpoint + "perro/", {
-        "type": "get"
-        , "encoding": "UTF-8"
-        , "data": {
-            // nombre: valor
-        }
-        , "success": function (result) {
-            console.log("Llego el contenido y no hubo error", result);
-
-            perros = [];
-            $.each(result, function(i,v){
-               perros.push(v);
-            });
-
-            console.debug('cargados %i perros', perros.length );
-            refreshListView();
-
-        }
-        , "error": function (result) {
-            console.error("Este callback maneja los errores", result);
-        }
-    });
-
-});
-
-function refreshListView(){
-
-     $list = $('#list_home');
-    $list.html('');
-    console.log('limpiada lista');
-
-    var li = '<li onClick="detalle_perro(#posicion#)">'+
-                 '<a href="#">'+
-                     '<img src="#perro.imagen#" class="ui-thumbnail ui-thumbnail-circular" />'+
-                     '<h2>#perro.nombre#</h2>'+
-                     '<p>#perro.raza#</p>'+
-                 '</a>'+
-             '</li>';
-
-    var content = '';
-    var item;
-    $.each(perros, function(i,v){
-        item = li;
-        item = item.replace('#posicion#', i);
-        item = item.replace('#perro.imagen#', v.imagen);
-        item = item.replace('#perro.nombre#', v.nombre);
-        item = item.replace('#perro.raza#', v.raza);
-        content += item;
-    });
-
-    $list.html(content).listview('refresh');
-    console.log('lista recargada');
-
-    //registar click en listview
-    /*
-     $list.click(function(event){
-         console.debug('click %o' , event.target.parentElement );
-     });
-    */
-
-}
-
-
-function detalle_perro( posicion ){
-    console.debug('pulsado %i elemento de la lista valor %o', posicion, perros[posicion]);
-
-    // Dialog present in a multipage document
-    $.mobile.changePage( "#page_detalle", { role: "dialog" } );
-
-}
-
-</script>
-
-
 </body>
 
 </html>

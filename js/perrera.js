@@ -30,6 +30,7 @@ $(function() {
         }
         , "error": function (result) {
             console.error("Este callback maneja los errores", result);
+            $('#list-home').html('<p>Servidor en mantenimiento, perdone las molestias.</p>')
         }
     });
 
