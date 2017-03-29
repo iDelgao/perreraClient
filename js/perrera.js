@@ -1,6 +1,7 @@
 var endpoint = "http://localhost:8080/perreraWS/service/";
     var perros = []; //array con perros
     var perro_seleccionado;
+    $list = $('#list_home');
 $(function() {
     console.log( "ready!" );
     //llamada Ajax
@@ -14,7 +15,7 @@ $(function() {
             console.log("Llego el contenido y no hubo error", result);
             perros = [];
             if ( result == undefined ){
-                $('#list_home').html('<li style="color:red;">No Existen perro todavia, por favor da de alta uno.</li>');
+                $list.html('<li style="color:red;">No Existen perro todavia, por favor da de alta uno.</li>');
             }else{
                 $.each(result, function(i,v){
                    perros.push(v);
@@ -25,12 +26,11 @@ $(function() {
         }
         , "error": function (result) {
             console.error("Este callback maneja los errores", result);
-            $('#list_home').html('<li style="color:red;">Servidor parado, perdona las molestias.</li>');
+            $list.html('<li style="color:red;">Servidor parado, perdona las molestias.</li>');
         }
     });
 });
 function refreshListView(){
-    $list = $('#list_home');
     $list.html('');
     console.log('limpiada lista');
     var li = '<li onClick="detalle_perro(#posicion#)">'+
@@ -55,6 +55,14 @@ function refreshListView(){
 }
 function detalle_perro( posicion ){
     console.debug('pulsado %i elemento de la lista valor %o', posicion, perros[posicion]);
+    perro_seleccionado = perros[posicion];
     // Dialog present in a multipage document
     $.mobile.changePage( "#page_detalle", { role: "dialog" } );
 }
+$(document).on("pagebeforeshow","#page_detalle",function(){
+  console.log('pagebeforeshow:#page_detalle');
+  //cargar datos del perro seleccionado
+  $("#detalle_perro_titulo").text( perro_seleccionado.nombre );
+  $("#detalle_perro_raza").text( perro_seleccionado.raza );
+  $("#detalle_perro_imagen").attr('src', perro_seleccionado.imagen );
+});
