@@ -10,7 +10,7 @@ $(function() {
 
 
     //llamada Ajax
-    $.ajax(endpoint + "perro/", {
+   $.ajax(endpoint + "perro/", {
         "type": "get"
         , "encoding": "UTF-8"
         , "data": {
@@ -20,19 +20,26 @@ $(function() {
             console.log("Llego el contenido y no hubo error", result);
 
             perros = [];
-            $.each(result, function(i,v){
-               perros.push(v);
-            });
 
-            console.debug('cargados %i perros', perros.length );
-            refreshListView();
+            if ( result == undefined ){
+                $('#list_home').html('<li style="color:red;">No Existen perro todavia, por favor da de alta uno.</li>');
+
+            }else{
+                $.each(result, function(i,v){
+                   perros.push(v);
+                });
+
+                console.debug('cargados %i perros', perros.length );
+                refreshListView();
+            }
 
         }
         , "error": function (result) {
             console.error("Este callback maneja los errores", result);
-            $('#list-home').html('<p>Servidor en mantenimiento, perdone las molestias.</p>')
+            $('#list_home').html('<li style="color:red;">Servidor parado, perdona las molestias.</li>');
         }
     });
+
 
 });
 
